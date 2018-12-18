@@ -114,6 +114,154 @@
 <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
 <script>
+
+		let  rootpath='http://127.0.0.1:2998';
+	//邮箱格式===
+	var email = document.querySelector('#email');
+	email.onblur = function(){
+		var _email = email.value;
+		if(!/^[0-9a-zA-Z][\w\-\.]*@[\da-z\-]{1,63}(\.[a-z]+)+$/.test(_email)){
+			document.querySelector('#emailText').innerHTML= "邮箱格式不正确,请重新填写";
+			 document.querySelector('#emailText').style.color= "red";
+			 return false;
+		}else{
+			var url = rootpath + '/loginUser/username';
+			var data = {
+				email : _email
+			} 
+			// 验证用户名是否已存在================================================================================
+			$.post(url,data,function(res){
+				console.log(res);
+				if(res == '用户名已存在'){
+					document.querySelector('#emailText').innerHTML= "该邮箱已注册，请重新填写";
+					document.querySelector('#emailText').style.color= "red";
+					return false;
+				}else if(res == '用户不存在'){
+					document.querySelector('#emailText').style.color= "#fff";
+				}
+			})
+		}
+		document.querySelector('#emailText').style.color= "#fff";
+	}           
+	//密码格式==
+	var loginPassword = document.querySelector('#loginPassword');
+	loginPassword.onblur = function(){
+		var _loginPassword = loginPassword.value;
+		if(!/^[0-9a-zA-Z]{3,6}$/.test(_loginPassword)){
+			 document.querySelector('#passText').style.color= "red";
+			 return false;
+		}
+		document.querySelector('#passText').style.color= "#fff";
+	}
+	//点击发送请求邮箱验证码=========
+	var getCode = document.querySelector('#getCode');
+	getCode.onclick = function(){
+		var emailVal = email.value;
+		var loginPasswordVal = loginPassword.value;
+		if((/^[0-9a-zA-Z][\w\-\.]*@[\da-z\-]{1,63}(\.[a-z]+)+$/.test(emailVal)&&(/^[0-9a-zA-Z]{3,6}$/.test(loginPasswordVal)))){
+			var url = rootpath + '/sendCode/getCode';
+			var data = {
+				mail : emailVal
+			}
+			$.post(url,data,function(res){
+				if(res=="nosend"){
+					 alert('邮箱数据有误，验证码发送失败')
+				}else if(res=="ok"){
+					 console.log('验证码发送成功');
+					 alert('验证码发送成功，请查收');
+				}
+			})
+		}else if(emailVal=='' || loginPasswordVal==''){
+			alert('注册信息能为空');
+			return false;
+		}else{
+			alert('注册信息不正确，请重新填写');
+			return false;
+		}
+		
+	}	
+
+	// 注册验证（验证码与邮箱）====================================
+	var emailCode = document.querySelector('#emailCode');
+	var login = document.querySelector('#login');
+	var online = document.querySelector('#online');
+	console.log(online.checked)
+	login.onclick = function(){
+		var emailVal = email.value;
+		var loginPasswordVal = loginPassword.value;
+		var emailCodeVal = emailCode.value;
+		online.onblur = function(){
+			if(online.checked){
+				document.querySelector('#consentText').style.color = "#fff";
+			}else{
+				document.querySelector('#consentText').style.color = "red";
+			}
+		}
+		if((online.checked)&&(/^[0-9a-zA-Z]{3,6}$/.test(loginPasswordVal))){
+			var url = rootpath + '/sendCode/reg';
+			var data = {
+				mail : emailVal,
+				code : emailCodeVal
+			}
+			$.post(url,data,function(res){
+				if(res=="注册成功"){
+					// =======用户信息添加进数据库
+					var url = rootpath + '/loginUser/adduser';
+					var data = {
+						username : emailVal,
+						password : loginPasswordVal
+					}
+					$.post(url,data,function(res){
+						// 注册成功跳转
+						if(res.err == '0'){
+							alert('注册成功');
+							var resData = res.data;
+							for(var i=0;i<resData.length;i++){
+								var username = resData[i].username;
+							}
+							location.href = 'system-log.html?' + username;
+						}else if(res.err == '-1'){
+							alert('网络错误，请重新注册');
+						}
+					})
+				}else if(res=="验证码错误"){
+					 console.log('验证码错误');
+					 alert('验证码或邮箱错误');
+				}else{
+					alert('注册信息不正确')
+				}
+			})
+		}
+	}
+
+	// 登陆=========================================
+	var user = document.querySelector('#user');
+	var userPassword = document.querySelector('#userPassword');
+	console.log(userPassword);
+	var goLogin = document.querySelector('#goLogin');
+	goLogin.onclick = function(){
+		var userVal = user.value;
+		var userPasswordVal = userPassword.value; 
+		var url = rootpath + '/loginUser/login';
+		var data = {
+			user : userVal,
+			password : userPasswordVal
+		} 
+		$.post(url,data,function(res){
+			if(res.err == 0){
+				location.href = 'system-log.html?' + userVal;
+			}else if(res.err == -1){
+				alert('用户信息不正确');
+			}else if(res.err == -2){
+				alert('网络错误，请刷新');
+			}
+		})
+	}
+
+
+
+
+	
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");

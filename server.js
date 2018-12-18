@@ -17,17 +17,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
  // 路由
  const adminRouter = require('./router/goodsAdmin.js');
  const fileImgRouter = require('./router/fileImg.js');
- // const emailRouter = require('./router/sendCode.js');
- // const loginUserRouter = require('./router/loginUser.js');
+ const emailRouter = require('./router/sendCode.js');
+ const loginUserRouter = require('./router/loginUser.js');
 
 // 数据增删改查
  app.use('/goodsAdmin',adminRouter);
  // 文件(图片)上传
  app.use('/fileImg',fileImgRouter); 
  // 邮箱验证 
- // app.use('/sendCode',emailRouter);
+ app.use('/sendCode',emailRouter);
  // 注册用户信息
- // app.use('/loginUser',loginUserRouter);
+ app.use('/loginUser',loginUserRouter);
 
 
  app.listen(2998,()=>{ 
