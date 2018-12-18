@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 // 链接数据库
+
 const db = require('./mongoose/mongoose_connect.js');
 
 // 解析post请求 
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
  app.use(express.static(path.join(__dirname,'./img')));
 
  // 路由
+
  const adminRouter = require('./router/goodsAdmin.js');
  const fileImgRouter = require('./router/fileImg.js');
  const emailRouter = require('./router/sendCode.js');

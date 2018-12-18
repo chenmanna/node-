@@ -1,16 +1,15 @@
-const mongoose=require('mongoose');
-let Schema=mongoose.Schema;
-let goodsSchema=new Schema({
-	name:{type:String,required:true},
-	type:{type:String,required:true},
-	desc:{type:String,required:true},
-	price:{type:Number,required:true},
-	imgpath:{type:String,required:true},
-	stock:{type:Number,required:true},
-	grounding:{type:Boolean,default:false}
-})
+// 创建数据模型
+const mongoose = require('mongoose');
+let Schema = mongoose.Schema;
+let goosdSchema = new Schema({
+ 	offprice:{type:Number,required:true},
+ 	goodsname:{type:String,required:true},
+ 	url:{type:String,required:true},
+ 	title:{type:String,required:true},
+ 	price:{type:String,required:true} 
+});
+// 将Schema转为module对象
+let Goodstotal = mongoose.model('Goodstotal',goosdSchema);
+// 抛出模块
+module.exports = Goodstotal;
 
-// var Blog = mongoose.model('Blog',blogSchema);
-let goods=mongoose.model('goods',goodsSchema);
-
-module.exports=goods
