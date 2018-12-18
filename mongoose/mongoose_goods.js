@@ -1,13 +1,11 @@
 const mongoose=require('mongoose');
 let Schema=mongoose.Schema;
 let goodsSchema=new Schema({
-	name:{type:String,required:true},
-	type:{type:String,required:true},
-	desc:{type:String,required:true},
-	price:{type:Number,required:true},
-	imgpath:{type:String,required:true},
-	stock:{type:Number,required:true},
-	grounding:{type:Boolean,default:false}
+	offprice:{type:Number,required:true},
+ 	goodsname:{type:String,required:true},
+ 	url:{type:String,required:true},
+ 	title:{type:String,required:true},
+ 	price:{type:String,required:true} 
 })
 
 // var Blog = mongoose.model('Blog',blogSchema);

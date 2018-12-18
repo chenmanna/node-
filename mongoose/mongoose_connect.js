@@ -1,10 +1,10 @@
 // 数据库的连接
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/test',{useNewUrlParser:true});
+mongoose.connect('mongodb://localhost:27017/nodejs',{useNewUrlParser:true});
 
 let db = mongoose.connection;
-// 实例化连接对象
+// 实例化连接对象 
 db.on("error",function(error){
 	console.log("Database connection failure:" + error);
 
