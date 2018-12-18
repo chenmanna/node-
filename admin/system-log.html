@@ -190,6 +190,67 @@
 <script type="text/javascript" src="lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
+var Userinfo = document.querySelector('#Userinfo');
+// Userinfo.onclick = function(){
+// 	location.href = 'system-log.html';
+// }	
+console.log(location.search);
+// 获取传过来的用户名称
+var currentUser = decodeURI(location.search).substr(1);
+let  rootpath='http://127.0.0.1:2998';
+var url = rootpath + '/loginUser/currentUser';
+var data = {
+	currentUser : currentUser
+}
+var userCon = document.querySelector('#userCon');
+var currentName = document.querySelector('#currentName');
+$.post(url,data,function(res){
+	var resData = res.data;
+	// 渲染页面======
+	for(var i=0;i<resData.length;i++){
+		var td =`<tr class="text-c">
+					<td>${resData[i]._id}</td>
+					<td>${resData[i].username}</td>
+					<td>${resData[i].created}</td>
+				</tr>`
+		currentName.innerHTML = resData[i].username;
+		// 获取cookie数据
+		// var currentUser = {
+		// 	id: resData[i]._id,username:resData[i].username,password:resData[i].password,created:resData[i].created
+		// }
+
+	}
+	userCon.innerHTML = td;
+	// 当前用户信息存入cookie=========
+	// var userCookie = [];
+	// userCookie.push(currentUser);
+	Cookie.set('userCookie',JSON.stringify(resData));
+	console.log(document.cookie);
+	tk(res);
+	
+
+})
+console.log(document.cookie);
+
+// function tk(res){
+// 		var resData = res.data;
+// 		var user = '';
+// 		for(var i=0;i<resData.length;i++){
+// 			user+= resData[i].username;
+// 		}
+// 		layer.open({
+// 			type: 1,
+// 			area: ['300px','200px'],
+// 			fix: false, //不固定
+// 			maxmin: true,
+// 			shade:0.4,
+// 			title: '查看信息',
+// 			content: `<div>${user}</div>`
+// 		});
+// 	}
+
+
+
 $('.table-sort').dataTable({
 	"lengthMenu":false,//显示数量选择 
 	"bFilter": false,//过滤功能
