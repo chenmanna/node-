@@ -23,6 +23,7 @@ Router.post("/getCode",(req,res)=>{
 			// 发送失败
 			 res.send('nosend');
 		}else{
+			console.log(mail,code);
 			// 发送成功
 			 res.send('ok');
 		}
