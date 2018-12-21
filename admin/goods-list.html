@@ -166,6 +166,8 @@
 // 修改每页显示数量================================================
 var qty=document.querySelector("#qty");
 qty.onchange = function(e){
+	// ？？？
+	 location.reload();
 	var currentNum = e.target.value;
 	$('#qty').val(currentNum);
 	var _qty= qty.value;
@@ -182,13 +184,19 @@ qty.onchange = function(e){
 			$('#total').html(res.data.total);
 			total=res.data.total;
 			var pageData = res.data;
+			// 存储当前显示列表数量（再根据当前的显示数量请求数据渲染页面）
 			sessionStorage.setItem('pageQty', _qty);
-			console.log();
+			$('.pageNum').html(Math.ceil(res.data.total/pagesize));
+			// $('.pageNum').html(Math.ceil(res.data.total/_qty));
 		}
 	})
-}
-
-
+}       
+        // ？？？
+		// var allnum = $('#total');
+		// var _allnum = allnum.html()*1;
+		// var selectnum = $('#selected');
+		// var _selectnum = selectnum.val()*1;
+		// $('.pageNum').html(Math.ceil(_allnum/_selectnum));
 //批量删除===================================================
 let rootPath='http://127.0.0.1:2998';
 var userCon = document.querySelector('#userCon');
@@ -255,7 +263,7 @@ selectDel.onclick = function(){
 }
 
 
-//获取当前用户信息，渲染用户名	======================================
+//获取当前用户信息，渲染用户名	=============
 var userCookie = Cookie.get('userCookie') || [];
 if(typeof userCookie == 'string'){
     userCookie = JSON.parse(userCookie);
@@ -264,88 +272,132 @@ var userName = document.querySelector('#userName');
 for(var i=0;i<userCookie.length;i++){
 	userName.innerHTML = userCookie[i].username;
 }
-
 let  rootpath='http://127.0.0.1:2998';
 var $tbody = $('tbody');
 console.log($tbody);
 
 
 // 升序=========
-var priceUp = document.querySelector('#priceUp');
-var sort = true;
-priceUp.onclick = function(){
-	$('tbody').html('');	
-		var url = rootpath + '/goodsAdmin/sortup';
-		$.post(url,function(res){
-			console.log(res);
-			var resData = res.data.slice(0,3);
-			// var resData = res.data;
-			initPage(resData);
-		})
-}
-
+// var priceUp = document.querySelector('#priceUp');
+// var sort = true;
+// priceUp.onclick = function(){
+// 	$('tbody').html('');	
+// 		var url = rootpath + '/goodsAdmin/sortup';
+// 		$.post(url,function(res){
+// 			console.log(res);
+// 			var resData = res.data.slice(0,3);
+// 			// var resData = res.data;
+// 			initPage(resData);
+// 		})
+// }
 
 // 降序===========
-var priceDown = document.querySelector('#priceDown');
-priceDown.onclick = function(){
-	$('tbody').html('');		
-	var url = rootpath + '/goodsAdmin/sortdown';
-	$.post(url,function(res){
-		console.log(res);
-		// var resa = res.data;
-		// var resData = res.data;
-		var resData = res.data.slice(0,3);
-		initPage(resData);
-		console.log('aaaaaaaaaa',res);
-
-	})		
-}
-
-// *****************************************************************************************************************
 // var priceDown = document.querySelector('#priceDown');
 // priceDown.onclick = function(){
 // 	$('tbody').html('');		
 // 	var url = rootpath + '/goodsAdmin/sortdown';
-// 	let data = {};
-// 	if(sessionStorage.getItem("pageQty") != null){
-// 		var storageData = sessionStorage.getItem('pageQty');
-// 		 data = {
-// 			pagesize: storageData,
-// 			page: 1
-// 		}
-// 		nowpage = 1;
-// 	}else{
-// 		 data = {
-// 			pagesize: pagesize,
-// 			page: 1
-// 		}
-// 		nowpage = 1;
-// 	}
-	
-// 	$.post(url,data,function(res){
+// 	$.post(url,function(res){
 // 		console.log(res);
-// 		load(res.data);
-// 		// initPage(res.data)
-// 			// $('#total').html(res.data.total);
-// 			// $('.pageNum').html(Math.ceil(res.data.total/pagesize));
-// 			// console.log(currentPage);
-// 			// total = res.data.total;
-// 			// initPage(res.data)
-// 		// console.log(res);
 // 		// var resa = res.data;
-// 		// 	var resData = res.data;
-
-// 		// // var resData = res.data.slice(0,3);
-// 		// initPage(resData);
-// 		// console.log('aaaaaaaaaa',resa);
+// 		// var resData = res.data;
+// 		var resData = res.data.slice(0,3);
+// 		initPage(resData);
+// 		console.log('aaaaaaaaaa',res);
 
 // 	})		
 // }
+
+// *****************************************************************************************************************
+// 定义升序状态
+var priceUpState = false;
+var priceUp = document.querySelector('#priceUp');
+// 升序==========
+priceUp.onclick = function(){
+	priceUpState = true;
+	$('tbody').html('');	
+	if (sessionStorage.getItem("pageQty") != null) {
+		var storageData = sessionStorage.getItem('pageQty');
+		let url = rootpath+'/goodsAdmin/sortup';
+		let data = {
+			pagesize: storageData,
+			page: page
+		}
+		nowpage = page;
+		$.post(url,data,function(res){ 
+			console.log(res);
+			load(res.data);
+			$('#total').html(res.data.total);
+			console.log(currentPage);
+			total = res.data.total;
+			$('#qty').val(storageData);
+		})
+	}else{
+		$tbody.html('');
+		let url = rootpath+'/goodsAdmin/sortup';
+		let data = {
+			pagesize: pagesize,
+			page: page
+		}
+		nowpage = page;
+		$.post(url,data,function(res){
+			console.log(res);
+			load(res.data);
+			$('#total').html(res.data.total);
+			$('.pageNum').html(Math.ceil(res.data.total/pagesize));
+			console.log(currentPage);
+			total = res.data.total;
+			$('#qty').val(storageData);
+			
+		})
+	}
+}
+
+// 定义降序状态
+var priceDownState = false;
+// 降序=============
+var priceDown = document.querySelector('#priceDown');
+priceDown.onclick = function(){
+	priceDownState = true;
+	$('tbody').html('');	
+	if (sessionStorage.getItem("pageQty") != null) {
+		var storageData = sessionStorage.getItem('pageQty');
+		let url = rootpath+'/goodsAdmin/sortdown';
+		let data = {
+			pagesize: storageData,
+			page: page
+		}
+		nowpage = page;
+		$.post(url,data,function(res){ 
+			console.log(res);
+			load(res.data);
+			$('#total').html(res.data.total);
+			console.log(currentPage);
+			total = res.data.total;
+			$('#qty').val(storageData);
+		})
+	}else{
+		$tbody.html('');
+		let url = rootpath+'/goodsAdmin/sortdown';
+		let data = {
+			pagesize: pagesize,
+			page: page
+		}
+		nowpage = page;
+		$.post(url,data,function(res){
+			console.log(res);
+			load(res.data);
+			$('#total').html(res.data.total);
+			$('.pageNum').html(Math.ceil(res.data.total/pagesize));
+			console.log(currentPage);
+			total = res.data.total;
+			$('#qty').val(storageData);
+			
+		})
+	}
+}	
+
 // **************************************************************************************************************
-
-
-//================###########
-// 初始渲染页面
+// 初始渲染页面=============
 function initPage(resData){
 	// console.log(111111111111111);
 			let td = '';
@@ -367,10 +419,6 @@ function initPage(resData){
 			}
 			$('tbody').html(td);
 }
-//##########################################
-
-
-
 //分页查询==============================================================================================================================
 let pagesize = 3;
 // 定义当前页面
@@ -410,13 +458,7 @@ function getGoods(page){
 			console.log(res);
 			load(res.data);
 			$('#qty').val(storageData);
-			// $('#total').html(res.data.total);
-			// $('.pageNum').html(Math.ceil(res.data.total/pagesize));
-			// // $('.currentPage').html(Math.floor(res.data.total/pagesize));
-			// // var currentPage = document.querySelector('.currentPage').innerHTML;
-			// // currentPage = 1*1;
-			// console.log(currentPage);
-			// total = res.data.total;
+			$('.pageNum').html(Math.ceil(res.data.total/pagesize));
 		})
 	}	
 }
@@ -453,12 +495,11 @@ function load(data){
 
 var currentPage = document.querySelector('.currentPage');
 // 分页跳转======
+let page=1;
 function goPage(type){
-	let page=1;
 	$tbody.html('');
 	// $('tbody').html('');
 	//page标书目标页
-   
    switch (type) {
    	 case 'first' : 
    	 page=1;
@@ -487,6 +528,17 @@ function goPage(type){
    	 break;
    }
 getGoods(page);
+if(priceDownState){
+	// priceDownState = true;
+	priceUpState = false;
+	priceDown.onclick(page);
+	
+}
+if(priceUpState){
+	// priceUpState = true;
+	priceDownState = false;
+	priceUp.onclick(page);
+}
 }
 
 

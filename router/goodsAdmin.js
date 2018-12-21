@@ -265,64 +265,58 @@ Router.post('/goodsUpdate',(req,res)=>{
  * @apiSuccess {String} data  返回数据
  */
 // 价格排序上==========================
-Router.post('/sortup',(req,res)=>{
-  // res.send('112');
-  Goods.find({},null,{sort: {'offprice' : -1}},(err,data)=>{
-    if(err){
-      console.log({err: -1,msg:'排序失败',data: null});
-    }else{
-      res.send({err: 0,msg:'排序成功1',data: data})
-    }
-    console.log('qqqqqqqqqqqqqqqqqqqqq');
-  })
-})
-
-
-// 价格排序下===============================================================================================
-// Router.post('/sortdown',(req,res)=>{
+// Router.post('/sortup',(req,res)=>{
 //   // res.send('112');
-//   let obj={}
-//   let  {pagesize,page}=req.body
-//   Goods.find({},null,{sort: {'offprice' : 1}},(err,data)=>{
+//   Goods.find({},null,{sort: {'offprice' : -1}},(err,data)=>{
 //     if(err){
-//       console.log(22222222222222222222222222);
 //       console.log({err: -1,msg:'排序失败',data: null});
 //     }else{
-//       Goods.find({data:data}).limit(Number(pagesize)).skip((Number(page)-1)*Number(pagesize))
-//       .then((data)=>{
-//         console.log(11111111111111111111);
-//           obj.goodslist=data
-//     res.send({err:0,msg:'查询成功???',data:obj})
-
-//       })
-//       .catch((err)=>{
-//         console.log(err);
-//       })
-    
-//       // res.send({err: 0,msg:'排序成功',data: data})
+//       res.send({err: 0,msg:'排序成功1',data: data})
 //     }
-
+//     console.log('qqqqqqqqqqqqqqqqqqqqq');
 //   })
 // })
 
+Router.post('/sortup',(req,res)=>{
+ let  {pagesize,page}=req.body
+  let obj={}
+  Goods.find()
+  .then((data)=>{
+    // 获取总条数
+    obj.total=data.length
+      return Goods.find().limit(Number(pagesize)).skip((Number(page)-1)*Number(pagesize)).sort({'offprice' : -1});
+  })
+  .then((data)=>{
+    //处理的是第几页的几条数据
+    obj.goodslist=data
+    res.send({err:0,msg:'查询成功',data:obj})
+  })
+  .catch((err)=>{
+    console.log(err)
+    res.send({err:-1,msg:'查询错误',data:null})
+  })
+})
 
-  // let  {pagesize,page}=req.body
-  // let obj={}
-  // Goods.find()
-  // .then((data)=>{
-  //   // 获取总条数
-  //   obj.total=data.length
-  //     return Goods.find().limit(Number(pagesize)).skip((Number(page)-1)*Number(pagesize))
-  // })
-  // .then((data)=>{
-  //   //处理的是第几页的几条数据
-  //   obj.goodslist=data
-  //   res.send({err:0,msg:'查询成功',data:obj})
-  // })
-  // .catch((err)=>{
-  //   console.log(err)
-  //   res.send({err:-1,msg:'查询错误',data:null})
-  // })
+// 价格排序下===============================================================================================
+Router.post('/sortdown',(req,res)=>{
+ let  {pagesize,page}=req.body
+  let obj={}
+  Goods.find()
+  .then((data)=>{
+    // 获取总条数
+    obj.total=data.length
+      return Goods.find().limit(Number(pagesize)).skip((Number(page)-1)*Number(pagesize)).sort({'offprice' : 1});
+  })
+  .then((data)=>{
+    //处理的是第几页的几条数据
+    obj.goodslist=data
+    res.send({err:0,msg:'查询成功',data:obj})
+  })
+  .catch((err)=>{
+    console.log(err)
+    res.send({err:-1,msg:'查询错误',data:null})
+  })
+})
   // =============================================================================================================
 
 /**
@@ -337,17 +331,17 @@ Router.post('/sortup',(req,res)=>{
  * @apiSuccess {String} data  返回数据
  */
 // 价格排序下===========================***********
-Router.post('/sortdown',(req,res)=>{
-  // res.send('112');
-  Goods.find({},null,{sort: {'offprice' : 1}},(err,data)=>{
-    if(err){
-      console.log({err: -1,msg:'排序失败',data: null});
-    }else{
-      res.send({err: 0,msg:'排序成功',data: data})
-    }
+// Router.post('/sortdown',(req,res)=>{
+//   // res.send('112');
+//   Goods.find({},null,{sort: {'offprice' : 1}},(err,data)=>{
+//     if(err){
+//       console.log({err: -1,msg:'排序失败',data: null});
+//     }else{
+//       res.send({err: 0,msg:'排序成功',data: data})
+//     }
 
-  })
-})
+//   })
+// })
 
 
 /**
