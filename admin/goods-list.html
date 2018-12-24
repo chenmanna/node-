@@ -191,12 +191,7 @@ qty.onchange = function(e){
 		}
 	})
 }       
-        // ？？？
-		// var allnum = $('#total');
-		// var _allnum = allnum.html()*1;
-		// var selectnum = $('#selected');
-		// var _selectnum = selectnum.val()*1;
-		// $('.pageNum').html(Math.ceil(_allnum/_selectnum));
+
 //批量删除===================================================
 let rootPath='http://127.0.0.1:2998';
 var userCon = document.querySelector('#userCon');
@@ -275,21 +270,6 @@ for(var i=0;i<userCookie.length;i++){
 let  rootpath='http://127.0.0.1:2998';
 var $tbody = $('tbody');
 console.log($tbody);
-
-
-// 升序=========
-// var priceUp = document.querySelector('#priceUp');
-// var sort = true;
-// priceUp.onclick = function(){
-// 	$('tbody').html('');	
-// 		var url = rootpath + '/goodsAdmin/sortup';
-// 		$.post(url,function(res){
-// 			console.log(res);
-// 			var resData = res.data.slice(0,3);
-// 			// var resData = res.data;
-// 			initPage(resData);
-// 		})
-// }
 
 // 降序===========
 // var priceDown = document.querySelector('#priceDown');
@@ -531,13 +511,13 @@ getGoods(page);
 if(priceDownState){
 	// priceDownState = true;
 	priceUpState = false;
-	priceDown.onclick(page);
+	priceDown.onclick();
 	
 }
 if(priceUpState){
 	// priceUpState = true;
 	priceDownState = false;
-	priceUp.onclick(page);
+	priceUp.onclick();
 }
 }
 
